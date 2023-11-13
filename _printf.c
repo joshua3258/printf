@@ -1,9 +1,13 @@
 #include "main.h"
+#include <stdarg.h>
+#include <unistd.h>
+#include <stdio.h>
 
 /**
- * _printf - custom printf function with limited functionality
- * @format: The format string
- * Return: The number of characters printed (excluding the null byte)
+ * _printf - Custom printf function
+ * @format: Format string
+ *
+ * Return: Number of characters printed (excluding null byte)
  */
 int _printf(const char *format, ...) {
     va_list args;
@@ -13,11 +17,26 @@ int _printf(const char *format, ...) {
     va_start(args, format);
 
     for (ptr = format; *ptr != '\0'; ptr++) {
-        if (*ptr == '%' && *(ptr + 1) != '\0') {
-            ptr++;
-            count += handle_format_specifier(*ptr, args);
+        if (*ptr == '%') {
+            ptr++;  
+
+            switch (*ptr) {
+                case 'c':
+                   count += write(1, (const void *)va_arg(args, int), 1); 
+                    break;
+                case 's':
+                    count += write(1, va_arg(args, char *), 1);
+                    break;
+                case 'd':
+                case 'i':
+                    count += printf("%d", va_arg(args, int));
+                    break;
+                default:
+                    count += write(1, "%", 1);
+                    count += write(1, ptr, 1);
+            }
         } else {
-            count += _putchar(*ptr);
+            count += write(1, ptr, 1);
         }
     }
 
