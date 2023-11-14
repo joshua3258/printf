@@ -25,7 +25,7 @@ int printf_hex_aux(unsigned long int num)
 		array[i] = temp % 16;
 		temp /= 16;
 	}
-	for (i = counter - 1; i >= 0; i++)
+	for (i = counter - 1; i >= 0; i--)
 	{
 		if (array[i] > 9)
 			array[i] = array[i] + 39;
